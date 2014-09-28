@@ -391,9 +391,6 @@ public final class FileReader extends FileTransferJob implements IFileTransferLi
 				exception = e;
 			} catch (FileCreateException e) {
 				exception = e;
-			} catch (Throwable t) {
-				if (exception != null)
-					exception.printStackTrace();
 			}
 			if (checkException(uri, retryCount))
 				break;
@@ -461,7 +458,8 @@ public final class FileReader extends FileTransferJob implements IFileTransferLi
 					Thread.sleep(connectionRetryDelay);
 					return false;
 				} catch (InterruptedException e) {
-					/* ignore */
+					/* someone is trying to tell us something so don't ignore */
+					throw RepositoryStatusHelper.wrap(e);
 				}
 			}
 			throw RepositoryStatusHelper.wrap(exception);
